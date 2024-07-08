@@ -1,4 +1,4 @@
-# Decap Spider
+## Decap Spider
 
 I need to add:
 
@@ -15,3 +15,5 @@ I've used 11ty to create the demo:
 - Run `npx @11ty/eleventy --serve`
 - Run `npx decap-server` to enable local testing
 - Visit http://localhost:8080/admin/ to test
+
+I want to be able to run `node run` to update the `src/admin/config.yml` file automatically.
