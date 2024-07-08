@@ -1,8 +1,10 @@
 I need to add:
 
-- Automatic figuring out of required status (adding required: false to field yml) by comparing the merged fields and if one is missing, then we're presuming it's required
+- Automatic figuring out of required status (adding required: false to field yml) by comparing the merged fields and if one is missing, then we're presuming it's not required
 - Fixes to nested fields so they work the same way too
 - Extensive testing to make sure all fields are mapped and it works perfectly.
+
+The end result should be a CMS that is automatically generated based from page data, with correct nested fields and required status.
 
 I've used 11ty to create the demo:
 
