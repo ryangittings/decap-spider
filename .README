@@ -1,0 +1,12 @@
+I need to add:
+
+- Automatic figuring out of required status (adding required: false to field yml) by comparing the merged fields and if one is missing, then we're presuming it's required
+- Fixes to nested fields so they work the same way too
+- Extensive testing to make sure all fields are mapped and it works perfectly.
+
+I've used 11ty to create the demo:
+
+- Clone repo
+- Run npx @11ty/eleventy --serve
+- Run npx decap-server to enable local testing
+- Visit http://localhost:8080/admin/ to test
