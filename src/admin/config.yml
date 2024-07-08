@@ -252,7 +252,6 @@ collections:
     identifier_field: 'title'
     create: true
     extension: 'md'
-    filter: { field: 'layout', value: 'layouts/page.njk' }
     meta: { path: { widget: string, label: 'Path', index_file: 'index' } }
     nested:
       depth: 4
