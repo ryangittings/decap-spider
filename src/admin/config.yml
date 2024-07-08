@@ -1,0 +1,263 @@
+local_backend: true
+backend:
+  name: 'github'
+  repo: 'Gittings-Studio/website'
+  branch: 'master'
+
+media_folder: 'src/uploads'
+public_folder: '/uploads'
+
+button: &BUTTON
+  label: Button
+  name: button
+  widget: object
+  fields:
+    - label: Text
+      name: text
+      widget: string
+    - label: Link
+      name: link
+      widget: string
+
+blocks: &BLOCKS
+  label: Blocks
+  name: blocks
+  widget: list
+  types:
+    - label: Hero
+      name: hero
+      widget: object
+      fields:
+        - label: Title
+          name: title
+          widget: string
+        - label: Style
+          name: style
+          widget: select
+          options:
+            - background
+            - inline
+        - label: Image
+          name: image
+          widget: image
+        - label: Content
+          name: content
+          widget: markdown
+        - *BUTTON
+    - label: Navigation
+      name: navigation
+      widget: object
+      fields:
+        - label: Title
+          name: title
+          widget: string
+        - label: Style
+          name: style
+          widget: select
+          options:
+            - inline
+        - label: Key
+          name: key
+          widget: string
+        - label: Eyebrow
+          name: eyebrow
+          widget: string
+        - label: Content
+          name: content
+          widget: markdown
+    - label: Features
+      name: features
+      widget: object
+      fields:
+        - label: Title
+          name: title
+          widget: string
+        - label: Eyebrow
+          name: eyebrow
+          widget: string
+        - label: Items
+          name: items
+          widget: list
+          fields:
+            - label: Title
+              name: title
+              widget: string
+            - label: Icon
+              name: icon
+              widget: image
+            - label: Content
+              name: content
+              widget: markdown
+    - label: Image
+      name: image
+      widget: object
+      fields:
+        - label: Src
+          name: src
+          widget: image
+        - label: Alt
+          name: alt
+          widget: string
+    - label: Text
+      name: text
+      widget: object
+      fields:
+        - label: Title
+          name: title
+          widget: string
+        - label: Eyebrow
+          name: eyebrow
+          widget: string
+        - label: Content
+          name: content
+          widget: markdown
+        - *BUTTON
+        - label: Theme
+          name: theme
+          widget: select
+          options:
+            - primary-25
+          required: false
+    - label: Studies
+      name: studies
+      widget: object
+      fields:
+        - label: Title
+          name: title
+          widget: string
+        - label: Style
+          name: style
+          widget: select
+          options:
+            - inline
+    - label: Locations
+      name: locations
+      widget: object
+      fields:
+        - label: Title
+          name: title
+          widget: string
+    - label: Testimonials
+      name: testimonials
+      widget: object
+      fields:
+        - label: Title
+          name: title
+          widget: string
+        - label: Content
+          name: content
+          widget: markdown
+        - label: Items
+          name: items
+          widget: list
+          fields:
+            - label: Cite
+              name: cite
+              widget: string
+            - label: Content
+              name: content
+              widget: markdown
+        - label: Theme
+          name: theme
+          widget: select
+          options:
+            - primary-25
+          required: false
+    - label: Action
+      name: action
+      widget: object
+      fields:
+        - label: Title
+          name: title
+          widget: string
+        - label: Content
+          name: content
+          widget: markdown
+        - *BUTTON
+        - label: Overlap
+          name: overlap
+          widget: object
+          fields:
+            - label: Align
+              name: align
+              widget: string
+            - label: Theme
+              name: theme
+              widget: select
+              options: []
+          required: false
+    - label: Glass
+      name: glass
+      widget: object
+      fields:
+        - label: Title
+          name: title
+          widget: string
+        - label: Overlap
+          name: overlap
+          widget: object
+          fields:
+            - label: Align
+              name: align
+              widget: string
+            - label: Theme
+              name: theme
+              widget: select
+              options: []
+        - label: Image
+          name: image
+          widget: image
+        - label: Eyebrow
+          name: eyebrow
+          widget: string
+        - label: Content
+          name: content
+          widget: markdown
+        - *BUTTON
+    - label: Faqs
+      name: faqs
+      widget: object
+      fields:
+        - label: Title
+          name: title
+          widget: string
+        - label: Eyebrow
+          name: eyebrow
+          widget: string
+        - label: Items
+          name: items
+          widget: list
+          fields:
+            - label: Question
+              name: question
+              widget: string
+            - label: Answer
+              name: answer
+              widget: markdown
+    - label: Logos
+      name: logos
+      widget: object
+      fields:
+        - label: Title
+          name: title
+          widget: string
+        - label: Content
+          name: content
+          widget: markdown
+
+collections:
+  - label: 'Pages'
+    name: 'pages'
+    folder: 'src'
+    identifier_field: 'title'
+    create: true
+    extension: 'md'
+    filter: { field: 'layout', value: 'layouts/page.njk' }
+    meta: { path: { widget: string, label: 'Path', index_file: 'index' } }
+    nested:
+      depth: 4
+      summary: '{{title}}'
+    fields:
+      - { label: 'Layout', name: 'layout', widget: 'hidden', default: 'layouts/page.njk' }
+      - { label: 'Title', name: 'title', widget: 'string' }
+      - *BLOCKS
