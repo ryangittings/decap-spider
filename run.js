@@ -55,7 +55,8 @@ const formatBlock = (block, blockType, parentKey = '') => {
   let titleField = null;
 
   Object.entries(block).forEach(([key, value]) => {
-    const fieldDotName = parentKey ? `${blockType}.${parentKey}.${key}` : key;
+    const fieldDotName = parentKey ? `${parentKey}.${key}` : `${blockType}.${key}`;
+    console.log(fieldDotName);
 
     if (reusableFields.includes(key) && !reusableFieldDefinitions[key]) {
       reusableFieldDefinitions[key] = {
@@ -176,6 +177,8 @@ const writeMasterYml = (blocks) => {
     addOptionsToFields(block.fields, block.name);
   }
 
+  console.log(optionFieldValues);
+
   // Create reusable fields YAML with anchors
   const reusableFieldsYaml = Object.entries(reusableFieldDefinitions)
     .map(([key, value]) => yaml.dump({ [key]: value }, { noRefs: true })
@@ -233,7 +236,6 @@ const addOptionsToFields = (fields, blockName) => {
   if (!fields) return;
   fields.forEach(field => {
     const fieldName = `${blockName}.${field.name}`;
-    console.log(fieldName);
 
     if (field.widget === 'select') {
       field.options = Array.from(optionFieldValues[fieldName] || []);
