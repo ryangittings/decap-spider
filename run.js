@@ -145,12 +145,20 @@ const mergeFields = (targetFields, newFields) => {
   const newFieldNames = newSafeFields.map(field => field.name);
   const diff = diffArrays(newFieldNames, existingFieldNames);
 
-  return merged.map(item => {
-    return typeof item === 'object' && item.widget !== 'list' && item.widget !== 'object' ? {
-      ...item,
-      required: !diff.includes(item.name)
-    } : item;
+  const updatedFields = merged.map(item => {
+    if (typeof item === 'object' && item.widget !== 'list' && item.widget !== 'object') {
+      return { ...item, required: !diff.includes(item.name) };
+    }
+    if (item.widget === 'object' || item.widget === 'list') {
+      item.fields = mergeFields(
+        targetFields.find(f => f.name === item.name)?.fields,
+        newFields.find(f => f.name === item.name)?.fields
+      );
+    }
+    return item;
   });
+
+  return updatedFields;
 };
 
 // Collect unique option values for select fields
@@ -178,12 +186,7 @@ const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + strin
 const writeMasterYml = (blocks) => {
   // Add options to select fields
   for (const block of Object.values(blocks)) {
-    (block.fields ?? []).forEach(field => {
-      if (field.widget === 'select') {
-        const optionKey = `${block.name}-${field.name}`;
-        field.options = Array.from(optionFieldValues[optionKey] || []);
-      }
-    });
+    addOptionsToFields(block.fields, block.name);
   }
 
   // Create reusable fields YAML with anchors
@@ -194,6 +197,8 @@ const writeMasterYml = (blocks) => {
 
   // Generate YAML for blocks with references
   const blocksYaml = yaml.dump(Object.values(blocks), { noRefs: true });
+
+  console.log(optionFieldValues);
 
   const output = `
 local_backend: true
@@ -236,6 +241,19 @@ collections:
 
   fs.writeFileSync(outputFilePath, output, 'utf8');
   console.log(`Generated ${outputFilePath}`);
+};
+
+// Add options to select fields recursively
+const addOptionsToFields = (fields, blockName) => {
+  if (!fields) return;
+  fields.forEach(field => {
+    if (field.widget === 'select') {
+      const optionKey = `${blockName}-${field.name}`;
+      field.options = Array.from(optionFieldValues[optionKey] || []);
+    } else if (field.fields) {
+      addOptionsToFields(field.fields, blockName);
+    }
+  });
 };
 
 // Main function to execute the script

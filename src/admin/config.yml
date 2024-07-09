@@ -93,12 +93,15 @@ blocks: &BLOCKS
             - label: Title
               name: title
               widget: string
+              required: true
             - label: Icon
               name: icon
               widget: image
+              required: true
             - label: Content
               name: content
               widget: markdown
+              required: true
     - label: Image
       name: image
       widget: object
@@ -187,6 +190,7 @@ blocks: &BLOCKS
             - label: Content
               name: content
               widget: markdown
+              required: true
         - label: Theme
           name: theme
           widget: select
@@ -213,10 +217,12 @@ blocks: &BLOCKS
             - label: Align
               name: align
               widget: string
+              required: false
             - label: Theme
               name: theme
               widget: select
               options: []
+              required: false
     - label: Glass
       name: glass
       widget: object
@@ -232,10 +238,12 @@ blocks: &BLOCKS
             - label: Align
               name: align
               widget: string
+              required: true
             - label: Theme
               name: theme
               widget: select
               options: []
+              required: true
         - label: Image
           name: image
           widget: image
@@ -268,9 +276,11 @@ blocks: &BLOCKS
             - label: Question
               name: question
               widget: string
+              required: true
             - label: Answer
               name: answer
               widget: markdown
+              required: true
     - label: Logos
       name: logos
       widget: object
