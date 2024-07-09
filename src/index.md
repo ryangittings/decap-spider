@@ -35,7 +35,6 @@ blocks:
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
   - type: image
     src: '/uploads/test.jpg'
-    alt: ''
   - type: text
     eyebrow: Lorem
     title: Lorem ipsum dolor sit amet, consectetur adipiscing elit

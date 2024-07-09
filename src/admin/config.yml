@@ -113,7 +113,7 @@ blocks: &BLOCKS
         - label: Alt
           name: alt
           widget: string
-          required: true
+          required: false
     - label: Text
       name: text
       widget: object

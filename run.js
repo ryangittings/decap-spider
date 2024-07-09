@@ -56,7 +56,6 @@ const formatBlock = (block, blockType, parentKey = '') => {
 
   Object.entries(block).forEach(([key, value]) => {
     const fieldDotName = parentKey ? `${parentKey}.${key}` : `${blockType}.${key}`;
-    console.log(fieldDotName);
 
     if (reusableFields.includes(key) && !reusableFieldDefinitions[key]) {
       reusableFieldDefinitions[key] = {
@@ -176,8 +175,6 @@ const writeMasterYml = (blocks) => {
   for (const block of Object.values(blocks)) {
     addOptionsToFields(block.fields, block.name);
   }
-
-  console.log(optionFieldValues);
 
   // Create reusable fields YAML with anchors
   const reusableFieldsYaml = Object.entries(reusableFieldDefinitions)
