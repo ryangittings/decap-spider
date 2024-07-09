@@ -50,24 +50,26 @@ const processMarkdownFiles = (mdFiles) => {
 };
 
 // Format block fields to CMS configuration
-const formatBlock = (block, blockType) => {
+const formatBlock = (block, blockType, parentKey = '') => {
   let fields = [];
   let titleField = null;
 
   Object.entries(block).forEach(([key, value]) => {
+    const fieldDotName = parentKey ? `${blockType}.${parentKey}.${key}` : key;
+
     if (reusableFields.includes(key) && !reusableFieldDefinitions[key]) {
       reusableFieldDefinitions[key] = {
         label: capitalizeFirstLetter(key),
         name: key,
         widget: 'object',
-        fields: formatBlock(value, blockType)
+        fields: formatBlock(value, blockType, fieldDotName)
       };
     }
 
     if (reusableFields.includes(key)) {
       fields.push(`*${key.toUpperCase()}`);
     } else if (optionFields.includes(key)) {
-      collectOptionFieldValues(blockType, key, value);
+      collectOptionFieldValues(fieldDotName, value);
 
       fields.push({
         label: capitalizeFirstLetter(key),
@@ -82,7 +84,7 @@ const formatBlock = (block, blockType) => {
         label: capitalizeFirstLetter(key),
         name: key,
         widget: 'list',
-        fields: formatBlock(value, blockType)
+        fields: formatBlock(value, blockType, fieldDotName)
       });
     } else if (!isNaN(key)) {
       fields = formatBlock(value, blockType);
@@ -91,7 +93,7 @@ const formatBlock = (block, blockType) => {
         label: capitalizeFirstLetter(key),
         name: key,
         widget: 'object',
-        fields: formatBlock(value, blockType)
+        fields: formatBlock(value, blockType, fieldDotName)
       });
     } else if (key !== 'type') {
       const field = { label: capitalizeFirstLetter(key), name: key, widget: determineWidgetType(value) };
@@ -149,14 +151,12 @@ const mergeFields = (targetFields, newFields) => {
 };
 
 // Collect unique option values for select fields
-const collectOptionFieldValues = (blockType, fieldName, fieldValue) => {
-  const name = `${blockType}.${fieldName}`;
-
-  if (!optionFieldValues[name]) {
-    optionFieldValues[name] = new Set();
+const collectOptionFieldValues = (fieldDotName, fieldValue) => {
+  if (!optionFieldValues[fieldDotName]) {
+    optionFieldValues[fieldDotName] = new Set();
   }
 
-  optionFieldValues[name].add(fieldValue);
+  optionFieldValues[fieldDotName].add(fieldValue);
 };
 
 // Determine the widget type based on the content
@@ -184,8 +184,6 @@ const writeMasterYml = (blocks) => {
 
   // Generate YAML for blocks with references
   const blocksYaml = yaml.dump(Object.values(blocks), { noRefs: true });
-
-  console.log(optionFieldValues);
 
   const output = `
 local_backend: true
@@ -234,11 +232,13 @@ collections:
 const addOptionsToFields = (fields, blockName) => {
   if (!fields) return;
   fields.forEach(field => {
+    const fieldName = `${blockName}.${field.name}`;
+    console.log(fieldName);
+
     if (field.widget === 'select') {
-      const optionKey = `${blockName}.${field.name}`;
-      field.options = Array.from(optionFieldValues[optionKey] || []);
+      field.options = Array.from(optionFieldValues[fieldName] || []);
     } else if (field.fields) {
-      addOptionsToFields(field.fields, `${blockName}.${field.name}`);
+      addOptionsToFields(field.fields, fieldName); // Pass fieldName to handle nested fields
     }
   });
 };

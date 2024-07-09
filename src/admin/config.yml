@@ -35,9 +35,7 @@ blocks: &BLOCKS
         - label: Style
           name: style
           widget: select
-          options:
-            - background
-            - inline
+          options: []
           required: true
         - label: Image
           name: image
@@ -59,8 +57,7 @@ blocks: &BLOCKS
         - label: Style
           name: style
           widget: select
-          options:
-            - inline
+          options: []
           required: true
         - label: Key
           name: key
@@ -134,8 +131,7 @@ blocks: &BLOCKS
         - label: Theme
           name: theme
           widget: select
-          options:
-            - primary-25
+          options: []
           required: false
     - label: Studies
       name: studies
@@ -148,8 +144,7 @@ blocks: &BLOCKS
         - label: Style
           name: style
           widget: select
-          options:
-            - inline
+          options: []
           required: true
     - label: Locations
       name: locations
@@ -194,8 +189,7 @@ blocks: &BLOCKS
         - label: Theme
           name: theme
           widget: select
-          options:
-            - primary-25
+          options: []
           required: false
     - label: Action
       name: action
@@ -221,7 +215,8 @@ blocks: &BLOCKS
             - label: Theme
               name: theme
               widget: select
-              options: []
+              options:
+                - primary-125
               required: false
     - label: Glass
       name: glass
@@ -242,7 +237,8 @@ blocks: &BLOCKS
             - label: Theme
               name: theme
               widget: select
-              options: []
+              options:
+                - primary-25
               required: true
         - label: Image
           name: image
