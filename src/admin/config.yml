@@ -31,18 +31,22 @@ blocks: &BLOCKS
         - label: Title
           name: title
           widget: string
+          required: true
         - label: Style
           name: style
           widget: select
           options:
             - background
             - inline
+          required: true
         - label: Image
           name: image
           widget: image
+          required: true
         - label: Content
           name: content
           widget: markdown
+          required: false
         - *BUTTON
     - label: Navigation
       name: navigation
@@ -51,20 +55,25 @@ blocks: &BLOCKS
         - label: Title
           name: title
           widget: string
+          required: true
         - label: Style
           name: style
           widget: select
           options:
             - inline
+          required: true
         - label: Key
           name: key
           widget: string
+          required: true
         - label: Eyebrow
           name: eyebrow
           widget: string
+          required: true
         - label: Content
           name: content
           widget: markdown
+          required: true
     - label: Features
       name: features
       widget: object
@@ -72,9 +81,11 @@ blocks: &BLOCKS
         - label: Title
           name: title
           widget: string
+          required: true
         - label: Eyebrow
           name: eyebrow
           widget: string
+          required: true
         - label: Items
           name: items
           widget: list
@@ -88,6 +99,7 @@ blocks: &BLOCKS
             - label: Content
               name: content
               widget: markdown
+          required: true
     - label: Image
       name: image
       widget: object
@@ -95,9 +107,11 @@ blocks: &BLOCKS
         - label: Src
           name: src
           widget: image
+          required: true
         - label: Alt
           name: alt
           widget: string
+          required: true
     - label: Text
       name: text
       widget: object
@@ -105,12 +119,15 @@ blocks: &BLOCKS
         - label: Title
           name: title
           widget: string
+          required: true
         - label: Eyebrow
           name: eyebrow
           widget: string
+          required: true
         - label: Content
           name: content
           widget: markdown
+          required: true
         - *BUTTON
         - label: Theme
           name: theme
@@ -125,11 +142,13 @@ blocks: &BLOCKS
         - label: Title
           name: title
           widget: string
+          required: true
         - label: Style
           name: style
           widget: select
           options:
             - inline
+          required: true
     - label: Locations
       name: locations
       widget: object
@@ -137,6 +156,7 @@ blocks: &BLOCKS
         - label: Title
           name: title
           widget: string
+          required: true
     - label: Testimonials
       name: testimonials
       widget: object
@@ -144,9 +164,11 @@ blocks: &BLOCKS
         - label: Title
           name: title
           widget: string
+          required: true
         - label: Content
           name: content
           widget: markdown
+          required: true
         - label: Items
           name: items
           widget: list
@@ -157,6 +179,7 @@ blocks: &BLOCKS
             - label: Content
               name: content
               widget: markdown
+          required: true
         - label: Theme
           name: theme
           widget: select
@@ -170,9 +193,11 @@ blocks: &BLOCKS
         - label: Title
           name: title
           widget: string
+          required: true
         - label: Content
           name: content
           widget: markdown
+          required: true
         - *BUTTON
         - label: Overlap
           name: overlap
@@ -193,6 +218,7 @@ blocks: &BLOCKS
         - label: Title
           name: title
           widget: string
+          required: true
         - label: Overlap
           name: overlap
           widget: object
@@ -204,15 +230,19 @@ blocks: &BLOCKS
               name: theme
               widget: select
               options: []
+          required: true
         - label: Image
           name: image
           widget: image
+          required: true
         - label: Eyebrow
           name: eyebrow
           widget: string
+          required: true
         - label: Content
           name: content
           widget: markdown
+          required: true
         - *BUTTON
     - label: Faqs
       name: faqs
@@ -221,9 +251,11 @@ blocks: &BLOCKS
         - label: Title
           name: title
           widget: string
+          required: true
         - label: Eyebrow
           name: eyebrow
           widget: string
+          required: true
         - label: Items
           name: items
           widget: list
@@ -234,6 +266,7 @@ blocks: &BLOCKS
             - label: Answer
               name: answer
               widget: markdown
+          required: true
     - label: Logos
       name: logos
       widget: object
@@ -241,9 +274,11 @@ blocks: &BLOCKS
         - label: Title
           name: title
           widget: string
+          required: true
         - label: Content
           name: content
           widget: markdown
+          required: true
 
 collections:
   - label: 'Pages'

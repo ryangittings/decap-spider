@@ -38,11 +38,12 @@ const processMarkdownFiles = (mdFiles) => {
           label: capitalizeFirstLetter(blockType),
           name: blockType,
           widget: 'object',
-          fields: formatBlock(block).fields
+          fields: formatBlock(block)
         };
-      } else {
-        mergeFields(aggregatedBlocks[blockType].fields, formatBlock(block).fields);
       }
+
+      console.log(blockType);
+      aggregatedBlocks[blockType].fields = mergeFields(aggregatedBlocks[blockType].fields, formatBlock(block));
     });
 
     return aggregatedBlocks;
@@ -60,7 +61,7 @@ const formatBlock = (block) => {
         label: capitalizeFirstLetter(key),
         name: key,
         widget: 'object',
-        fields: formatBlock(value).fields
+        fields: formatBlock(value)
       };
     }
 
@@ -89,7 +90,7 @@ const formatBlock = (block) => {
         label: capitalizeFirstLetter(key),
         name: key,
         widget: 'object',
-        fields: formatBlock(value).fields
+        fields: formatBlock(value)
       });
     } else if (key !== 'type') {
       const field = { label: capitalizeFirstLetter(key), name: key, widget: determineWidgetType(value) };
@@ -103,18 +104,38 @@ const formatBlock = (block) => {
     fields.unshift(titleField);
   }
 
-  return { fields };
+  return fields;
 };
+
+// Diff arrays
+const diffArrays = (arr1, arr2) => [...arr1.filter(item => !arr2.includes(item)), ...arr2.filter(item => !arr1.includes(item))];
 
 // Merge fields from different blocks of the same type
 const mergeFields = (targetFields, newFields) => {
-  const existingFieldNames = new Set(targetFields.map(field => field.name));
-  newFields.forEach(newField => {
-    if (!existingFieldNames.has(newField.name)) {
-      newField.required = false;
-      targetFields.push(newField);
-      existingFieldNames.add(newField.name);
-    }
+  const targetSafeFields = (targetFields ?? []);
+  const newSafeFields = (newFields ?? []);
+
+  const fieldMap = new Map();
+
+  targetFields.forEach(field => {
+    fieldMap.set(field.name, field);
+  });
+
+  newFields.forEach(field => {
+    fieldMap.set(field.name, field);
+  });
+
+  const merged = Array.from(fieldMap.values());
+
+  const existingFieldNames = targetSafeFields.map(field => field.name);
+  const newFieldNames = newSafeFields.map(field => field.name);
+  const diff = diffArrays(newFieldNames, existingFieldNames);
+
+  return merged.map(item => {
+    return typeof item === 'object' ? {
+      ...item,
+      required: !diff.includes(item.name)
+    } : item
   });
 };
 
@@ -153,7 +174,7 @@ const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + strin
 const writeMasterYml = (blocks) => {
   // Add options to select fields
   for (const block of Object.values(blocks)) {
-    block.fields.forEach(field => {
+    (block.fields ?? []).forEach(field => {
       if (field.widget === 'select') {
         const optionKey = `${block.name}-${field.name}`;
         field.options = Array.from(optionFieldValues[optionKey] || []);
