@@ -99,7 +99,6 @@ blocks: &BLOCKS
             - label: Content
               name: content
               widget: markdown
-          required: true
     - label: Image
       name: image
       widget: object
@@ -175,11 +174,19 @@ blocks: &BLOCKS
           fields:
             - label: Cite
               name: cite
-              widget: string
+              widget: object
+              fields:
+                - label: Name
+                  name: name
+                  widget: string
+                  required: true
+                - label: Position
+                  name: position
+                  widget: string
+                  required: true
             - label: Content
               name: content
               widget: markdown
-          required: true
         - label: Theme
           name: theme
           widget: select
@@ -210,7 +217,6 @@ blocks: &BLOCKS
               name: theme
               widget: select
               options: []
-          required: false
     - label: Glass
       name: glass
       widget: object
@@ -230,7 +236,6 @@ blocks: &BLOCKS
               name: theme
               widget: select
               options: []
-          required: true
         - label: Image
           name: image
           widget: image
@@ -266,7 +271,6 @@ blocks: &BLOCKS
             - label: Answer
               name: answer
               widget: markdown
-          required: true
     - label: Logos
       name: logos
       widget: object

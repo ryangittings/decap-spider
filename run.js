@@ -21,6 +21,19 @@ const getAllMarkdownFiles = (dir) => {
   }, []);
 };
 
+// Flatten object with dot notation
+const flattenObject = (obj, parent = '', res = {}) => {
+  for (let key in obj) {
+    const propName = parent ? parent + '.' + key : key;
+    if (typeof obj[key] == 'object' && !Array.isArray(obj[key])) {
+      flattenObject(obj[key], propName, res);
+    } else {
+      res[propName] = obj[key];
+    }
+  }
+  return res;
+};
+
 // Aggregate blocks by type from each .md file
 const processMarkdownFiles = (mdFiles) => {
   return mdFiles.reduce((aggregatedBlocks, filePath) => {
@@ -51,7 +64,7 @@ const processMarkdownFiles = (mdFiles) => {
 
 // Format block fields to CMS configuration
 const formatBlock = (block) => {
-  const fields = [];
+  let fields = [];
   let titleField = null;
 
   Object.entries(block).forEach(([key, value]) => {
@@ -82,8 +95,10 @@ const formatBlock = (block) => {
         label: capitalizeFirstLetter(key),
         name: key,
         widget: 'list',
-        fields: formatFields(value)
+        fields: formatBlock(value)
       });
+    } else if (!isNaN(key)) {
+      fields = formatBlock(value);
     } else if (typeof value === 'object') {
       fields.push({
         label: capitalizeFirstLetter(key),
@@ -131,7 +146,7 @@ const mergeFields = (targetFields, newFields) => {
   const diff = diffArrays(newFieldNames, existingFieldNames);
 
   return merged.map(item => {
-    return typeof item === 'object' ? {
+    return typeof item === 'object' && item.widget !== 'list' && item.widget !== 'object' ? {
       ...item,
       required: !diff.includes(item.name)
     } : item;
@@ -154,16 +169,6 @@ const determineWidgetType = (value) => {
   if (typeof value === 'string' && value.startsWith('/uploads/')) return 'image';
   if (typeof value === 'string' && value.length > 59) return 'markdown';
   return 'string';
-};
-
-// Format nested fields dynamically
-const formatFields = (fieldsArray) => {
-  if (!Array.isArray(fieldsArray) || fieldsArray.length === 0) return [];
-  return Object.entries(fieldsArray[0]).map(([key, value]) => ({
-    label: capitalizeFirstLetter(key),
-    name: key,
-    widget: determineWidgetType(value)
-  }));
 };
 
 // Capitalize the first letter of a string
