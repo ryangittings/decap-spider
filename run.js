@@ -21,19 +21,6 @@ const getAllMarkdownFiles = (dir) => {
   }, []);
 };
 
-// Flatten object with dot notation
-const flattenObject = (obj, parent = '', res = {}) => {
-  for (let key in obj) {
-    const propName = parent ? parent + '.' + key : key;
-    if (typeof obj[key] == 'object' && !Array.isArray(obj[key])) {
-      flattenObject(obj[key], propName, res);
-    } else {
-      res[propName] = obj[key];
-    }
-  }
-  return res;
-};
-
 // Aggregate blocks by type from each .md file
 const processMarkdownFiles = (mdFiles) => {
   return mdFiles.reduce((aggregatedBlocks, filePath) => {
@@ -51,11 +38,11 @@ const processMarkdownFiles = (mdFiles) => {
           label: capitalizeFirstLetter(blockType),
           name: blockType,
           widget: 'object',
-          fields: formatBlock(block)
+          fields: formatBlock(block, blockType)
         };
       }
 
-      aggregatedBlocks[blockType].fields = mergeFields(aggregatedBlocks[blockType].fields, formatBlock(block));
+      aggregatedBlocks[blockType].fields = mergeFields(aggregatedBlocks[blockType].fields, formatBlock(block, blockType));
     });
 
     return aggregatedBlocks;
@@ -63,7 +50,7 @@ const processMarkdownFiles = (mdFiles) => {
 };
 
 // Format block fields to CMS configuration
-const formatBlock = (block) => {
+const formatBlock = (block, blockType) => {
   let fields = [];
   let titleField = null;
 
@@ -73,14 +60,14 @@ const formatBlock = (block) => {
         label: capitalizeFirstLetter(key),
         name: key,
         widget: 'object',
-        fields: formatBlock(value)
+        fields: formatBlock(value, blockType)
       };
     }
 
     if (reusableFields.includes(key)) {
       fields.push(`*${key.toUpperCase()}`);
     } else if (optionFields.includes(key)) {
-      collectOptionFieldValues(block.type, key, value);
+      collectOptionFieldValues(blockType, key, value);
 
       fields.push({
         label: capitalizeFirstLetter(key),
@@ -95,16 +82,16 @@ const formatBlock = (block) => {
         label: capitalizeFirstLetter(key),
         name: key,
         widget: 'list',
-        fields: formatBlock(value)
+        fields: formatBlock(value, blockType)
       });
     } else if (!isNaN(key)) {
-      fields = formatBlock(value);
+      fields = formatBlock(value, blockType);
     } else if (typeof value === 'object') {
       fields.push({
         label: capitalizeFirstLetter(key),
         name: key,
         widget: 'object',
-        fields: formatBlock(value)
+        fields: formatBlock(value, blockType)
       });
     } else if (key !== 'type') {
       const field = { label: capitalizeFirstLetter(key), name: key, widget: determineWidgetType(value) };
@@ -163,7 +150,7 @@ const mergeFields = (targetFields, newFields) => {
 
 // Collect unique option values for select fields
 const collectOptionFieldValues = (blockType, fieldName, fieldValue) => {
-  const name = `${blockType}-${fieldName}`;
+  const name = `${blockType}.${fieldName}`;
 
   if (!optionFieldValues[name]) {
     optionFieldValues[name] = new Set();
@@ -248,10 +235,10 @@ const addOptionsToFields = (fields, blockName) => {
   if (!fields) return;
   fields.forEach(field => {
     if (field.widget === 'select') {
-      const optionKey = `${blockName}-${field.name}`;
+      const optionKey = `${blockName}.${field.name}`;
       field.options = Array.from(optionFieldValues[optionKey] || []);
     } else if (field.fields) {
-      addOptionsToFields(field.fields, blockName);
+      addOptionsToFields(field.fields, `${blockName}.${field.name}`);
     }
   });
 };
