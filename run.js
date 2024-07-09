@@ -42,7 +42,6 @@ const processMarkdownFiles = (mdFiles) => {
         };
       }
 
-      console.log(blockType);
       aggregatedBlocks[blockType].fields = mergeFields(aggregatedBlocks[blockType].fields, formatBlock(block));
     });
 
@@ -117,11 +116,11 @@ const mergeFields = (targetFields, newFields) => {
 
   const fieldMap = new Map();
 
-  targetFields.forEach(field => {
+  targetSafeFields.forEach(field => {
     fieldMap.set(field.name, field);
   });
 
-  newFields.forEach(field => {
+  newSafeFields.forEach(field => {
     fieldMap.set(field.name, field);
   });
 
@@ -135,7 +134,7 @@ const mergeFields = (targetFields, newFields) => {
     return typeof item === 'object' ? {
       ...item,
       required: !diff.includes(item.name)
-    } : item
+    } : item;
   });
 };
 
